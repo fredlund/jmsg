@@ -18,9 +18,18 @@ javadoc {
 }
 
 dependencies {
+  testImplementation('org.junit.jupiter:junit-jupiter:5.6.1')
+  testImplementation('org.hamcrest:hamcrest-library:2.1')
 }
 
 test {
+	useJUnitPlatform()
+        testLogging {        
+                events "failed"
+		exceptionFormat "full"
+                // outputs.upToDateWhen {false}
+                showStandardStreams = true
+        }
 }
 
 

@@ -3,27 +3,21 @@ package es.upm.babel.cclib.jmsg;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import org.junit.*;
-import org.junit.Assert;
-import org.junit.runners.*;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.rules.Timeout;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.time.Duration;
+
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 
 public class Tests {
   static ThreadGroup tg;
   static volatile int raisedException;
 
   public Tests() { }
-  
-  @Rule
-  public Timeout timeout = new Timeout(20000, TimeUnit.MILLISECONDS);
-
   
   @Test
   public void test_2rcv() {
@@ -163,7 +157,7 @@ public class Tests {
       Arrays.asList(Action.receive(ch1),Action.receive(ch2, value -> Integer.parseInt(value)));
     Integer resultInt = Command.select(selectArgs);
 
-    Assert.assertTrue(resultInt != null);
+    assertTrue(resultInt != null);
     assertThat(resultInt, either(is(1)).or(is(2)));
     sleep(100); 
     assertThat(raisedException,is(0));
@@ -196,7 +190,7 @@ public class Tests {
       Arrays.asList(Action.receive(ch1),Action.receive(ch2, value -> Integer.parseInt(value)));
     Integer resultInt = Command.select(selectArgs);
 
-    Assert.assertTrue(resultInt != null);
+    assertTrue(resultInt != null);
     assertThat(resultInt, is(1));
     sleep(100); 
     assertThat(raisedException,is(0));
@@ -228,7 +222,7 @@ public class Tests {
       Arrays.asList(Action.receive(ch1),Action.receive(ch2, value -> Integer.parseInt(value)));
     Integer resultInt = Command.select(selectArgs);
 
-    Assert.assertTrue(resultInt != null);
+    assertTrue(resultInt != null);
     assertThat(resultInt, is(2));
     sleep(100); 
     assertThat(raisedException,is(0));
@@ -265,7 +259,7 @@ public class Tests {
        null);
     Integer resultInt = Command.select(selectArgs);
 
-    Assert.assertTrue(resultInt != null);
+    assertTrue(resultInt != null);
     assertThat(resultInt, is(2));
     sleep(100); 
     assertThat(raisedException,is(0));
@@ -363,7 +357,7 @@ public class Tests {
   }
 
 
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
     raisedException = 0;
     tg = new ExceptionHandlingThreadGroup("testing-tg");
