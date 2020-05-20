@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    sourceCompatibility='1.8'
+    targetCompatibility='1.8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+javadoc {
+  options.memberLevel = JavadocMemberLevel.PUBLIC
+  options.overview = "overview.html"
+  options.encoding = 'UTF-8'
+}
+
+dependencies {
+}
+
+test {
+}
+
+

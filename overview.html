@@ -1,0 +1,61 @@
+<body>
+  <h1>JMsg -- the Java Message Passing Library</h1>
+<p>The JMsg library enables application to send synchronous messages between processes
+  over synchronous communication channels.
+  </p>
+<p>
+ Synchronous Communication Channels (implemented by the class {@link es.upm.babel.cclib.JMsg.SynchronousChannel})
+ are typed using Java Generics, i.e., it is possible
+ to restrict the values that can sent over a channel, and the Java type system guarantees
+ that only well-typed values can be sent and received over a channel.
+ In a sense, this library implements a very simple CCS-like process algebra (due to Robin Milner),
+ without  restriction and relabelling, and where internal actions cannot be included in the
+ choice construct.
+ </p>
+ <p>
+ Synchronous Communication Channels are binary, assymetric and synchronous, i.e., a communication happens
+ only when there is a thread offering to send a value over a channel (ch), 
+ and another thread offers to receive a value sent over the channel (ch).
+ Moreover, a channel is independent of the thread that created it. That is, any thread may receive
+ values over any channel, and any thread may send values over any channel.
+</p>
+<p>
+ The library implements a select method, which returns when exactly one
+ of the offers (to send or receive values) has resulted in a synchronous communication.
+ Note that the argument to the select method (a list of communication offers) may concern
+ offers over differently typed communication channels (see the method
+ {@link es.upm.babel.cclib.JMsg.Command#select} for
+details).
+</p>
+<h2>An example</h2>
+<p>
+Below we show a small self-contained example. When the main method is invoked, two additional threads
+are created, which attempt to send messages (the Integers 1 and 10) 
+with the thread executing the main method. However, the receiving thread accepts only values less than
+10, thus ensuring that the thread sending the value 1 will synchronize with the main thread,
+while the thread sending the value 10 will wait forever to synchronize:
+<pre>
+<code>
+import es.upm.babel.cclib.JMsg.*;
+
+public class Example {
+  static class Sender implements Runnable {
+    private SynchronousChannel&lt;Integer&gt; ch;
+    private int value;
+    public Sender(SynchronousChannel&lt;Integer&gt; ch, int value) { this.ch = ch; this.value = value; }
+    public void run() { Command.send(ch,value); }
+  }
+
+  public static void main(String args[]) {
+    SynchronousChannel&lt;Integer&gt; ch = new SynchronousChannel&lt;&gt;();
+    
+    new Thread(new Sender(ch,1)).start();
+    new Thread(new Sender(ch,10)).start();
+
+    Integer result = Command.receiveWithGuard(ch,value -&gt; value&lt;10);
+    System.out.println("The value received is "+result);
+  }
+}
+</code>
+</p>
+</body
