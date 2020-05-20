@@ -20,7 +20,13 @@ The JMsg library enables application to send synchronous messages between proces
  of the offers (to send or receive values) has resulted in a synchronous communication.
  Note that the argument to the select method (a list of communication offers) may concern
  offers over differently typed communication channels (see the method select in the Command class for
-details).
+details). The following code excerpt, for example, expresses a choice between sending the value 2 on ch2, or receiving a value greater than 10 on ch1:
+```` java
+List<Action<?,Integer>> selectArgs =
+  Arrays.asList(Action.receiveWithGuard(ch1, value -> value > 10),
+                Action.send(ch2,2));
+Integer result = Command.select(selectArgs);
+ ```` 
 
 ## An example
 
